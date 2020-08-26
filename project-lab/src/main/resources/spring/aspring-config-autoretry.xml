@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-autowire="byName">
+
+    <bean id="autoRetryProxy" class="com.tparch.autoretry.AutoRetryProxy">
+        <property name="services">
+            <map>
+                <entry key="com.client.PresaleOrderExportService" value-ref="presaleOrderExportServiceConfig" />
+                <entry key="com.jrpayorder.rest.info.OrderResource" value-ref="jrOrderResourceServiceConfig" />
+            </map>
+        </property>
+
+      <!--  <property name="appName" value="${appName}"/>
+        <property name="umpKeyPrefix" value="${appGroup}"/>
+        <property name="group" value="${rpcGroup}"/>   -->
+        <property name="appName" value="appName"/>
+        <property name="umpKeyPrefix" value="appGroup"/>
+        <property name="group" value="rpcGroup"/>
+        <property name="configCenter" ref="configCenter"/>
+    </bean>
+
+    <bean id="presaleOrderExportService"  class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>com.client.PresaleOrderExportService</value>
+            </list>
+        </property>
+        <property name="interceptorNames" value="autoRetryProxy" />
+    </bean>
+
+
+
+    <!--预售系统服务配置-->
+    <bean id="presaleOrderExportServiceConfig" class="com.tparch.autoretry.ServiceConfig">
+        <property name="consumers">
+            <map>
+                <!-- 配置为不同的别名 -->
+                <entry key="1" value-ref="presaleOrderExportService1"></entry>
+                <entry key="2" value-ref="presaleOrderExportService2"></entry>
+            </map>
+        </property>
+        <property name="defaultConsumerKey" value="1" />
+        <property name="configId" value="${configs.PresaleOrderExportServiceConfigId}"/>
+    </bean>
+
+
+
+    <!--<bean id="configCenter" class="com.tparch.autoretry.ext.dbconfig.DBConfigCenter">-->
+        <!--<property name="configService" ref="xmlConfigService"/>-->
+    <!--</bean>-->
+
+</beans>

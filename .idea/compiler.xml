@@ -6,7 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="com-lab" />
+        <module name="com-domin" />
+        <module name="concurrent-lab" />
+        <module name="design-pattern" />
+        <module name="limit-lab" />
+        <module name="project-lab" />
       </profile>
     </annotationProcessing>
   </component>
